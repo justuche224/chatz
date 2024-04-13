@@ -1,10 +1,10 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar/Navbar";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import NextTopLoader from "nextjs-toploader";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import Navbar from "@/components/Navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -6,15 +6,24 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import LogoutButton from "./logout-button";
 import { ExitIcon, EnterIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
-import { FaUser, FaUserPlus } from "react-icons/fa";
+import {
+  FaCaretDown,
+  FaCog,
+  FaExclamation,
+  FaQuestion,
+  FaUser,
+  FaUserPlus,
+} from "react-icons/fa";
 import LoginButton from "./login-button";
 import RegisterButton from "./register-button";
 import Link from "next/link";
+import Themes from "../Navbar/Theme";
 
 export const UserButton = () => {
   const user = useCurrentUser();
@@ -37,8 +46,8 @@ export const UserButton = () => {
           <Avatar>
             <AvatarImage src={user?.image || ""} />
             <AvatarFallback>
-              <span className="w-[60px] h-[60px] font-bold bg-destructive text-center flex justify-center items-center p-2 rounded-full">
-                <FaUser className="text-3xl" />
+              <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
+                <FaUser size={17} className="text-secondary-foreground" />
               </span>
             </AvatarFallback>
           </Avatar>
@@ -64,10 +73,11 @@ export const UserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={user?.image || ""} />
+          <AvatarImage src={user?.image} />
           <AvatarFallback>
-            <span className="w-[60px] h-[60px] text-2xl font-bold bg-destructive text-center flex justify-center items-center p-2 rounded-full">
-              {getFirstTwoLetters()}
+            <span className="bg-destructive relative flex justify-center items-center p-1 rounded-full">
+              <span className="font-bold">{getFirstTwoLetters()}</span>
+              <FaCaretDown className="absolute -bottom-2 -right-2" size={20} />
             </span>
           </AvatarFallback>
         </Avatar>
@@ -95,6 +105,25 @@ export const UserButton = () => {
             </h2>
           </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem>
+          <div className="w-full flex flex-col justify-center items-center">
+            <Themes />
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <FaCog className="w-4 h-4 mr-2" />
+          {""}Settings
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <FaQuestion className="w-4 h-4 mr-2" />
+          {""}Help & Support
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <FaExclamation className="w-4 h-4 mr-2" />
+          {""}Privacy
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <LogoutButton>
           <DropdownMenuItem>
             <ExitIcon className="w-4 h-4 mr-2" />

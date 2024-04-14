@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
 
 const page = async ({ params }) => {
-  console.log(params.username);
+  //console.log(params.username);
   const user = await currentUser();
   if (user.username == params.username) {
     redirect("/profile");

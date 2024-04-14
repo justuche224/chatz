@@ -33,7 +33,7 @@ const NewPasswordForm = () => {
   });
 
   const onSubmit = (values) => {
-    console.log(values);
+    //console.log(values);
     setError("");
     setSuccess("");
     startTransition(() => {

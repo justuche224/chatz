@@ -34,6 +34,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.username && session.user) {
         session.user.username = token.username;
       }
+
+      if (session.user) {
+        session.user.image = token.image;
+      }
       // console.log(session.user);
       return session;
     },
@@ -45,6 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (!existingUser) return token;
       // console.log(existingUser);
+      token.image = existingUser.image;
       token.role = existingUser.role;
       token.username = existingUser.username;
 

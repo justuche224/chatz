@@ -9,7 +9,7 @@ import { DialogFooter } from "../ui/dialog";
 import { profilePicture } from "@/actions/profilePicture";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
-import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
 
 export default function EdgeStore({ user }) {
   const { edgestore } = useEdgeStore();
@@ -18,6 +18,7 @@ export default function EdgeStore({ user }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center m-6 gap-2">
@@ -58,16 +59,18 @@ export default function EdgeStore({ user }) {
                   const result = await profilePicture(res, user);
                   if (result.success) {
                     setSuccess(result.success);
-                    revalidatePath("/profile");
+                    setFile();
+                    window.location.reload();
+                    // router.refresh()
                   } else {
                     setError(result.error);
                   }
                 } else {
-                  setError("something went wrong! try again later");
+                  setError("something went wrong! try again later.");
                 }
               } catch (error) {
-                setError("something went wrong! try again later (catch)");
-                console.log(error);
+                setError("something went wrong! try again later.");
+                // console.log(error);
               } finally {
                 setLoading(false);
               }

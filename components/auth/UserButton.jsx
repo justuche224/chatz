@@ -53,6 +53,11 @@ export const UserButton = () => {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
+          <DropdownMenuItem>
+            <div className="w-full flex flex-col justify-center items-center">
+              <Themes />
+            </div>
+          </DropdownMenuItem>
           <LoginButton>
             <DropdownMenuItem>
               <EnterIcon className="w-4 h-4 mr-2" />
@@ -73,7 +78,10 @@ export const UserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src={user?.image} />
+          <AvatarImage
+            src={user?.image}
+            className="w-[40px] h-[40px] object-cover rounded-full"
+          />
           <AvatarFallback>
             <span className="bg-destructive relative flex justify-center items-center p-1 rounded-full">
               <span className="font-bold">{getFirstTwoLetters()}</span>
@@ -86,7 +94,13 @@ export const UserButton = () => {
         <DropdownMenuItem>
           {user.image ? (
             <Link href="/profile" className="mx-auto">
-              <Image src={user.image} alt="Profile" width={100} height={100} />
+              <Image
+                src={user.image}
+                alt="Profile"
+                width={100}
+                height={100}
+                className="w-[100px] h-[100px] object-cover rounded-full"
+              />
             </Link>
           ) : (
             <div className=" font-extrabold text-[4rem] w-full grid place-content-center bg-primary-500 rounded-full text-center hover:bg-primary-600">

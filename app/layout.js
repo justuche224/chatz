@@ -3,7 +3,6 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import NextTopLoader from "nextjs-toploader";
-import { EdgeStoreProvider } from "@/lib/edgestore";
 import Navbar from "@/components/Navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,13 +16,11 @@ export default async function RootLayout({ children }) {
   const session = await auth();
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>
+      <body className={`${inter.className}  bg-secondary`}>
         <SessionProvider session={session}>
-          <NextTopLoader />
+          <NextTopLoader height={5} color="red" />
           <Navbar />
-          <main className="mt-16 min-h-screen">
-            <EdgeStoreProvider>{children}</EdgeStoreProvider>
-          </main>
+          <main className="min-h-screen mt-12">{children}</main>
         </SessionProvider>
       </body>
     </html>

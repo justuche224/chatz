@@ -83,3 +83,7 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.center {
+  @apply flex justify-center items-center;
+}

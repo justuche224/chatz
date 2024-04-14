@@ -13,32 +13,38 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  firstname     String
-  lastname      String
-  username      String    @unique
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String
-  role          UserRole  @default(USER)
-  posts         Post[]
-  following     Follow[]  @relation("UserFollowing")
-  followers     Follow[]  @relation("UserFollowers")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String       @id @default(cuid())
+  firstname        String
+  lastname         String
+  username         String       @unique
+  email            String       @unique
+  emailVerified    DateTime?
+  image            String?
+  password         String
+  role             UserRole     @default(USER)
+  posts            Post[]
+  sentRequests     Friendship[] @relation("FriendshipRequests")
+  receivedRequests Friendship[] @relation("FriendshipResponses")
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 }
 
-model Follow {
-  id          String @id @default(cuid())
-  follower    User   @relation("UserFollowers", fields: [followerId], references: [id])
-  following   User   @relation("UserFollowing", fields: [followingId], references: [id])
-  followerId  String
-  followingId String
+model Friendship {
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  requester   User             @relation("FriendshipRequests", fields: [requesterId], references: [id])
+  requesterId String
+  addressee   User             @relation("FriendshipResponses", fields: [addresseeId], references: [id])
+  addresseeId String
+  status      FriendshipStatus @default(PENDING)
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  BLOCKED
 }
 
 model Post {

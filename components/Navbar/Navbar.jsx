@@ -9,12 +9,13 @@ import {
 } from "react-icons/fa";
 import { UserButton } from "../auth/UserButton";
 import Link from "next/link";
+import Search from "./Search";
 
 const Navbar = () => {
   return (
     <nav
       aria-label="Navigation bar"
-      className="w-full bg-secondary h-11 flex items-center justify-between px-3 fixed top-0 z-[999] border-b shadow border-destructive"
+      className="w-full bg-secondary h-11 flex items-center justify-between px-3 fixed top-0 z-[998] border-b shadow border-destructive"
     >
       <div className="flex items-center justify-between gap-2">
         <Image
@@ -43,9 +44,7 @@ const Navbar = () => {
         <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
           <FaPlus size={17} className="text-secondary-foreground" />
         </span>
-        <span className="bg-destructive flex justify-center items-center p-2 rounded-full cursor-pointer">
-          <FaSearch size={17} className="text-secondary-foreground" />
-        </span>
+        <Search />
         <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
           <FaBell size={17} className="text-secondary-foreground" />
         </span>

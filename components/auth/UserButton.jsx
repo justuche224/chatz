@@ -53,11 +53,6 @@ export const UserButton = () => {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
-          <DropdownMenuItem>
-            <div className="w-full flex flex-col justify-center items-center">
-              <Themes />
-            </div>
-          </DropdownMenuItem>
           <LoginButton>
             <DropdownMenuItem>
               <EnterIcon className="w-4 h-4 mr-2" />
@@ -118,11 +113,6 @@ export const UserButton = () => {
               {shortenString(user?.username)}
             </h2>
           </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <div className="w-full flex flex-col justify-center items-center">
-            <Themes />
-          </div>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

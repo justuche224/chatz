@@ -1,16 +1,120 @@
-import Image from "next/image";
+"use client";
+
 import {
   FaBars,
   FaBell,
   FaBorderAll,
   FaComments,
+  FaDesktop,
+  FaMoon,
   FaPlus,
-  FaSearch,
+  FaSun,
 } from "react-icons/fa";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { UserButton } from "../auth/UserButton";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import Search from "./Search";
 
+const Theme = () => {
+  const options = [
+    {
+      icon: <FaSun />,
+      text: "light",
+    },
+    {
+      icon: <FaMoon />,
+      text: "dark",
+    },
+    {
+      icon: <FaDesktop />,
+      text: "system",
+    },
+  ];
+  const [theme, setTheme] = useState("system"); // Initial state
+
+  useEffect(() => {
+    // Access localStorage within useEffect to avoid server-side issues
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme) {
+      setTheme(storedTheme);
+    }
+  }, []);
+  useEffect(() => {
+    const element = document.documentElement;
+    const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const updateTheme = () => {
+      switch (theme) {
+        case "dark":
+          element.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+          break;
+        case "light":
+          element.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+          break;
+        default:
+          localStorage.removeItem("theme");
+          element.classList.toggle("dark", darkQuery.matches);
+          break;
+      }
+    };
+
+    updateTheme(); // Apply initial theme
+
+    darkQuery.addEventListener("change", updateTheme);
+
+    return () => darkQuery.removeEventListener("change", updateTheme);
+  }, [theme]);
+
+  const ThemeIcon = () => {
+    if (theme === "system") {
+      return <FaDesktop size={17} className="text-secondary-foreground" />;
+    }
+    if (theme === "dark") {
+      return <FaMoon size={17} className="text-secondary-foreground" />;
+    }
+    if (theme === "light") {
+      return <FaSun size={17} className="text-secondary-foreground" />;
+    }
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
+          <ThemeIcon />
+        </span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>Themes</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {options?.map((opt) => (
+          <DropdownMenuItem
+            key={opt.text}
+            title={opt.text}
+            onClick={() => setTheme(opt.text)}
+            className={`text-xl pl-1 m-1 cursor-pointer ${
+              theme === opt.text && "text-destructive"
+            }`}
+          >
+            {opt.text}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 const Navbar = () => {
   return (
     <nav
@@ -41,9 +145,10 @@ const Navbar = () => {
       </div>
       <div></div>
       <div className="flex items-center justify-between gap-2">
-        <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
+        <Theme />
+        {/* <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
           <FaPlus size={17} className="text-secondary-foreground" />
-        </span>
+        </span> */}
         <Search />
         <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
           <FaBell size={17} className="text-secondary-foreground" />

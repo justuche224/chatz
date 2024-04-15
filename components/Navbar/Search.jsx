@@ -19,6 +19,8 @@ import { ClipLoader } from "react-spinners";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import Image from "next/image";
 import Link from "next/link";
+import { addFriend } from "@/actions/addFriend";
+import { toast } from "sonner";
 
 // TODO add search history using local storage
 
@@ -28,6 +30,7 @@ const Search = () => {
   const [searched, setSearched] = useState(false);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState("");
+  const [testing, setTesting] = useState([]);
 
   const user = useCurrentUser();
 
@@ -51,6 +54,7 @@ const Search = () => {
       setSearching(false);
     }
   };
+
   return (
     <Sheet>
       <SheetTrigger>
@@ -81,33 +85,66 @@ const Search = () => {
             {searched && result && result.length > 0 && (
               <div>
                 <h1 className="text-center text-xl underline mb-1">Results</h1>
-                {result.map((user) => (
-                  <div key={user.id} className="flex justify-between">
-                    <Link href={`/profile/${user.username}`}>
-                      <div className="flex justify-between gap-2 items-center">
-                        {user.image ? (
+                {result.map((resultUser) => (
+                  <div
+                    key={resultUser.id}
+                    className="flex flex-col justify-center"
+                  >
+                    <div className="flex justify-between gap-2 items-center">
+                      <Link href={`/profile/${resultUser.username}`}>
+                        {resultUser.image ? (
                           <Image
-                            src={user.image}
+                            src={resultUser.image}
                             width={70}
                             height={70}
-                            alt={`${user.firstname} ${user.lastname}`}
-                            className="rounded-full"
+                            alt={`${resultUser.firstname} ${resultUser.lastname}`}
+                            className="rounded-full object-cover"
                           />
                         ) : (
                           <FaUser />
                         )}
-                        <div>
-                          <h2 className="text-lg font-bold">{`${user.firstname} ${user.lastname}`}</h2>
+                      </Link>
+                      <div>
+                        <Link href={`/profile/${resultUser.username}`}>
+                          <h2 className="text-lg font-bold">{`${resultUser.firstname} ${resultUser.lastname}`}</h2>
                           <h3 className="text-md text-muted-foreground">
-                            @{user.username}
+                            @{resultUser.username}
                           </h3>
+                        </Link>
+                        <div
+                          className="flex justify-end items-center"
+                          onClick={async () => {
+                            if (!testing.includes(resultUser.username)) {
+                              const result = await addFriend(
+                                user.id,
+                                resultUser.username
+                              );
+                              if (result.error) {
+                                toast(result.error);
+                              }
+                              if (result.success) {
+                                setTesting((prevState) => [
+                                  ...prevState,
+                                  resultUser.username,
+                                ]);
+                                toast(result.success);
+                              }
+                            }
+                          }}
+                        >
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            disabled={testing.includes(resultUser.username)}
+                          >
+                            <span className="mr-2">
+                              {testing.includes(resultUser.username)
+                                ? "Request Sent"
+                                : "Add Friend"}
+                            </span>
+                          </Button>
                         </div>
                       </div>
-                    </Link>
-                    <div className="flex justify-end items-center">
-                      <Button size="sm" variant="secondary">
-                        Add friend
-                      </Button>
                     </div>
                   </div>
                 ))}

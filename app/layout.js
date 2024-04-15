@@ -1,9 +1,10 @@
 import { Inter } from "next/font/google";
-import "./globals.css";
 import { SessionProvider } from "next-auth/react";
-import { auth } from "@/auth";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "@/components/Navbar/Navbar";
+import { Toaster } from "@/components/ui/sonner";
+import { auth } from "@/auth";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default async function RootLayout({ children }) {
           <Navbar />
           <main className="min-h-screen mt-12">{children}</main>
         </SessionProvider>
+        <Toaster />
       </body>
     </html>
   );

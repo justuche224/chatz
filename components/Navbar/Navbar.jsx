@@ -8,6 +8,7 @@ import {
   FaDesktop,
   FaMoon,
   FaPlus,
+  FaSearch,
   FaSun,
 } from "react-icons/fa";
 import {
@@ -23,7 +24,7 @@ import { UserButton } from "../auth/UserButton";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Search from "./Search";
+import { usePathname } from "next/navigation";
 
 const Theme = () => {
   const options = [
@@ -96,7 +97,7 @@ const Theme = () => {
           <ThemeIcon />
         </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="z-[998]">
         <DropdownMenuLabel>Themes</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {options?.map((opt) => (
@@ -116,6 +117,7 @@ const Theme = () => {
   );
 };
 const Navbar = () => {
+  const currentPath = usePathname();
   return (
     <nav
       aria-label="Navigation bar"
@@ -130,12 +132,24 @@ const Navbar = () => {
           alt="logo"
         />
         <Link href="/">
-          <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
+          <span
+            className={
+              currentPath == "/"
+                ? "bg-transparent flex justify-center items-center p-2 rounded-full"
+                : "bg-destructive flex justify-center items-center p-2 rounded-full"
+            }
+          >
             <FaComments size={17} className="text-secondary-foreground" />
           </span>
         </Link>
         <Link href="/feed">
-          <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
+          <span
+            className={
+              currentPath == "/feed"
+                ? "bg-transparent flex justify-center items-center p-2 rounded-full"
+                : "bg-destructive flex justify-center items-center p-2 rounded-full"
+            }
+          >
             <FaBorderAll size={17} className="text-secondary-foreground" />
           </span>
         </Link>
@@ -149,10 +163,28 @@ const Navbar = () => {
         {/* <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
           <FaPlus size={17} className="text-secondary-foreground" />
         </span> */}
-        <Search />
-        <span className="bg-destructive flex justify-center items-center p-2 rounded-full">
-          <FaBell size={17} className="text-secondary-foreground" />
-        </span>
+        <Link href="/search">
+          <span
+            className={
+              currentPath == "/search"
+                ? "bg-transparent flex justify-center items-center p-2 rounded-full"
+                : "bg-destructive flex justify-center items-center p-2 rounded-full"
+            }
+          >
+            <FaSearch size={17} className="text-secondary-foreground" />
+          </span>
+        </Link>
+        <Link href="/notifications">
+          <span
+            className={
+              currentPath == "/notifications"
+                ? "bg-transparent flex justify-center items-center p-2 rounded-full"
+                : "bg-destructive flex justify-center items-center p-2 rounded-full"
+            }
+          >
+            <FaBell size={17} className="text-secondary-foreground" />
+          </span>
+        </Link>
         <UserButton />
       </div>
     </nav>

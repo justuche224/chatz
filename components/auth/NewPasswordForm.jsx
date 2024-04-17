@@ -20,12 +20,14 @@ import { newPassword } from "@/actions/new-password";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { ClipLoader } from "react-spinners";
+import { PasswordResetSuccessfulModal } from "../utils/Modal";
 
 const NewPasswordForm = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [resetSuccessful, setResetSuccessful] = useState(false);
   const [isPending, startTransition] = useTransition();
   const form = useForm({
     resolver: zodResolver(NewPasswordSchema),
@@ -45,42 +47,45 @@ const NewPasswordForm = () => {
   };
 
   return (
-    <CardWrapper
-      headerLabel="Enter a new Password"
-      backButtonLable="Back to login"
-      backButtonHref="/auth/login"
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-4">
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="******"
-                      type="password"
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
-          <Button className="w-full" type="submit" disabled={isPending}>
-            <span className="mr-2"> Reset password</span>{" "}
-            {isPending && <ClipLoader color="blue" size={20} />}
-          </Button>
-        </form>
-      </Form>
-    </CardWrapper>
+    <>
+      {resetSuccessful && <PasswordResetSuccessfulModal />}
+      <CardWrapper
+        headerLabel="Enter a new Password"
+        backButtonLable="Back to login"
+        backButtonHref="/auth/login"
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-4">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="******"
+                        type="password"
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormError message={error} />
+            <FormSuccess message={success} />
+            <Button className="w-full" type="submit" disabled={isPending}>
+              <span className="mr-2"> Reset password</span>{" "}
+              {isPending && <ClipLoader color="blue" size={20} />}
+            </Button>
+          </form>
+        </Form>
+      </CardWrapper>
+    </>
   );
 };
 

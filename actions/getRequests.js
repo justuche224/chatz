@@ -20,10 +20,10 @@ export const getPendingRequests = async (userId) => {
         }, // Include the details of the requester user
       },
     });
-    console.log(pendingRequests);
+    // console.log(pendingRequests);
     return pendingRequests;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return { error: "failed to get requests" };
   }
 };
@@ -46,10 +46,10 @@ export const getSentRequests = async (userId) => {
         }, // Include the details of the addressee user
       },
     });
-    console.log(sentRequests);
+    // console.log(sentRequests);
     return sentRequests;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return { error: "failed to get requests" };
   }
 };
@@ -84,7 +84,7 @@ export const getFriends = async (userId) => {
         },
       },
     });
-    console.log(acceptedFriendships);
+    // console.log(acceptedFriendships);
     return acceptedFriendships;
   } catch (error) {
     console.error(error);

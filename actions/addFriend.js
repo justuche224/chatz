@@ -15,7 +15,7 @@ export const addFriend = async (requesterId, addresseeUsername) => {
     });
 
     if (existingFriendship) {
-      console.log("Request sent already!");
+      // console.log("Request sent already!");
       return { success: "Request sent already!" };
     }
 
@@ -25,10 +25,10 @@ export const addFriend = async (requesterId, addresseeUsername) => {
         addresseeId: addressee.id,
       },
     });
-    console.log("Request sent!");
+    // console.log("Request sent!");
     return { success: "Request sent!" };
   } catch (error) {
-    console.log("Request failed!");
+    // console.log("Request failed!");
     return { error: "Failed to send request!" };
   }
 };

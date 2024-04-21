@@ -131,10 +131,10 @@ const Navbar = () => {
           priority
           alt="logo"
         />
-        <Link href="/">
+        <Link href="/chat">
           <span
             className={
-              currentPath == "/"
+              currentPath == "/chat"
                 ? "bg-transparent flex justify-center items-center p-2 rounded-full"
                 : "bg-destructive flex justify-center items-center p-2 rounded-full"
             }

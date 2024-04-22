@@ -1,6 +1,6 @@
-import ChatItem from "./ChatItem";
+import ConversationItem from "./ConversationItem";
 
-const ChatList = ({ friends, user }) => {
+const ConversationList = ({ friends, user }) => {
   if (!friends) return null; // Handle case where friends is not yet loaded
 
   return (
@@ -14,7 +14,7 @@ const ChatList = ({ friends, user }) => {
 
         return (
           <li key={otherParty.id}>
-            <ChatItem
+            <ConversationItem
               id={otherParty.id}
               firstname={otherParty.firstname}
               lastname={otherParty.lastname}
@@ -28,4 +28,4 @@ const ChatList = ({ friends, user }) => {
   );
 };
 
-export default ChatList;
+export default ConversationList;

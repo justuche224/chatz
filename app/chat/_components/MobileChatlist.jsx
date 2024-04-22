@@ -1,9 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ChatList from "./ChatList";
+import ConversationList from "./ConversationList";
 
-function MobileChatlist() {
+function MobileChatlist({ friends, user }) {
   const pathname = usePathname();
 
   return (
@@ -14,7 +14,7 @@ function MobileChatlist() {
           : "hidden"
       }
     >
-      <ChatList />
+      <ConversationList friends={friends} user={user} />
     </section>
   );
 }

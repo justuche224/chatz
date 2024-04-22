@@ -13,20 +13,29 @@ enum UserRole {
 }
 
 model User {
-  id               String       @id @default(cuid())
-  firstname        String
-  lastname         String
-  username         String       @unique
-  email            String       @unique
-  emailVerified    DateTime?
-  image            String?
-  password         String
-  role             UserRole     @default(USER)
-  posts            Post[]
+  id            String    @id @default(cuid())
+  firstname     String
+  lastname      String
+  username      String    @unique
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String
+  role          UserRole  @default(USER)
+
+  posts Post[]
+
   sentRequests     Friendship[] @relation("FriendshipRequests")
   receivedRequests Friendship[] @relation("FriendshipResponses")
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  conversationIds String[]
+
+  seenMessagesIds String[]
+
+  messages Message[]
 }
 
 model Friendship {
@@ -75,4 +84,31 @@ model PasswordResetToken {
   expires DateTime
 
   @@unique([email, token])
+}
+
+model Conversations {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  lastMessageAt DateTime @default(now())
+  isGroup       Boolean?
+
+  messagesIds String[]
+  messages    Message[]
+
+  userIds String[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  body      String?
+  image     String?
+  createdAt DateTime @default(now())
+
+  seenIds String[]
+
+  conversationId String
+  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderId String
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }

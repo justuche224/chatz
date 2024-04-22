@@ -68,6 +68,7 @@ export const getFriends = async (userId) => {
       include: {
         requester: {
           select: {
+            id: true,
             firstname: true,
             lastname: true,
             username: true,
@@ -76,6 +77,7 @@ export const getFriends = async (userId) => {
         },
         addressee: {
           select: {
+            id: true,
             firstname: true,
             lastname: true,
             username: true,

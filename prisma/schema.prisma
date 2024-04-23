@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -13,7 +13,7 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   firstname     String
   lastname      String
   username      String    @unique
@@ -23,29 +23,30 @@ model User {
   password      String
   role          UserRole  @default(USER)
 
-  posts Post[]
-
   sentRequests     Friendship[] @relation("FriendshipRequests")
   receivedRequests Friendship[] @relation("FriendshipResponses")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  conversationIds String[]
+  conversationIds String[]       @db.ObjectId
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
 
-  seenMessagesIds String[]
+  seenMessageIds String[]  @db.ObjectId
+  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
 
   messages Message[]
+  posts    Post[]
 }
 
 model Friendship {
-  id          String           @id @default(cuid())
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   requester   User             @relation("FriendshipRequests", fields: [requesterId], references: [id])
-  requesterId String
+  requesterId String           @db.ObjectId
   addressee   User             @relation("FriendshipResponses", fields: [addresseeId], references: [id])
-  addresseeId String
+  addresseeId String           @db.ObjectId
   status      FriendshipStatus @default(PENDING)
 }
 
@@ -57,19 +58,19 @@ enum FriendshipStatus {
 }
 
 model Post {
-  id        String  @id @default(cuid())
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   content   String
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
-  authorId  String
+  authorId  String  @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
-  id      String   @id @default(cuid())
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
   email   String
   token   String   @unique
   expires DateTime
@@ -78,7 +79,7 @@ model VerificationToken {
 }
 
 model PasswordResetToken {
-  id      String   @id @default(cuid())
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
   email   String
   token   String   @unique
   expires DateTime
@@ -86,29 +87,32 @@ model PasswordResetToken {
   @@unique([email, token])
 }
 
-model Conversations {
-  id            String   @id @default(cuid())
+model Conversation {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt     DateTime @default(now())
   lastMessageAt DateTime @default(now())
+  name          String?
   isGroup       Boolean?
 
-  messagesIds String[]
+  messagesIds String[]  @db.ObjectId
   messages    Message[]
 
-  userIds String[]
+  userIds String[] @db.ObjectId
+  users   User[]   @relation(fields: [userIds], references: [id])
 }
 
 model Message {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   body      String?
   image     String?
   createdAt DateTime @default(now())
 
-  seenIds String[]
+  seenIds String[] @db.ObjectId
+  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
 
-  conversationId String
-  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
-  senderId String
+  senderId String @db.ObjectId
   sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }

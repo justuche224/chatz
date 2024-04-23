@@ -56,6 +56,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
   },
+  debug: process.env.NODE_ENV === "development",
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   ...authConfig,

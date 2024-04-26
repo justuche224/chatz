@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import ConversationList from "./ConversationList";
 
-function MobileChatlist({ friends, user }) {
+function MobileChatlist({ friends, user, initialConverstions }) {
   const pathname = usePathname();
 
   return (
@@ -14,7 +14,11 @@ function MobileChatlist({ friends, user }) {
           : "hidden"
       }
     >
-      <ConversationList friends={friends} user={user} />
+      <ConversationList
+        friends={friends}
+        user={user}
+        initialConverstions={initialConverstions}
+      />
     </section>
   );
 }

@@ -1,21 +1,22 @@
+"use server";
+
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-export const createConversation = async (
-  otherUserId,
-  isGroup,
-  members,
-  name
-) => {
+export const createConversation = async (data) => {
+  const { otherUserId, isGroup, members, name } = data;
+
   try {
     const user = await currentUser();
 
     if (!user?.id || !user?.email) {
       return { error: "Unauthorised" };
     }
-
+    if (!isGroup && !otherUserId) {
+      return { error: "Cinversation must be a group or have a another user!" };
+    }
     if (isGroup && (!members || members.length < 2 || !name)) {
-      return { error: "Invalid Data" };
+      return { error: "Group must have atleast 3 members and a name!" };
     }
 
     if (isGroup) {
@@ -34,8 +35,11 @@ export const createConversation = async (
             ],
           },
         },
+        include: {
+          users: true,
+        },
       });
-
+      console.log(newConversation);
       return newConversation;
     }
 
@@ -59,6 +63,7 @@ export const createConversation = async (
     const singleConversation = existingConversation[0];
 
     if (singleConversation) {
+      console.log(singleConversation);
       return singleConversation;
     }
     const newConversation = await db.conversation.create({
@@ -74,7 +79,11 @@ export const createConversation = async (
           ],
         },
       },
+      include: {
+        users: true,
+      },
     });
+    console.log(newConversation);
 
     return newConversation;
   } catch (error) {

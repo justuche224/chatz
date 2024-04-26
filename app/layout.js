@@ -17,7 +17,7 @@ export default async function RootLayout({ children }) {
   const session = await auth();
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className}  bg-secondary`}>
+      <body className={`${inter.className}  bg-secondary h-screen`}>
         <SessionProvider session={session}>
           <NextTopLoader height={5} color="red" />
           <Navbar />

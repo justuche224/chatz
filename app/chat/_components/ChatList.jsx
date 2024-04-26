@@ -1,6 +1,6 @@
 import ChatItem from "./ChatItem";
 
-const ChatList = ({ friends, user }) => {
+const ChatList = ({ friends, user, setOpen }) => {
   if (!friends) return null; // Handle case where friends is not yet loaded
 
   return (
@@ -20,6 +20,7 @@ const ChatList = ({ friends, user }) => {
               lastname={otherParty.lastname}
               username={otherParty.username}
               image={otherParty.image}
+              setOpen={setOpen}
             />
           </li>
         );

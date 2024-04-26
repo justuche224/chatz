@@ -9,10 +9,9 @@ const page = async () => {
   // console.log(user);
 
   return (
-    <div className=" flex flex-col justify-center items-center">
+    <div className="w-full h-full flex flex-col justify-center items-center">
       <h1 className="text-3xl text-center">Select a contact to chat</h1>
       <div>
-        hi
         <ChatList user={user} friends={friends} />
       </div>
     </div>

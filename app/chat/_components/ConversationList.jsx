@@ -1,29 +1,27 @@
+"use client";
+
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import ConversationItem from "./ConversationItem";
 
-const ConversationList = ({ friends, user }) => {
-  if (!friends) return null; // Handle case where friends is not yet loaded
+const ConversationList = ({ friends, user, initialConverstions }) => {
+  const currentPath = usePathname();
+  const [items, setItem] = useState(initialConverstions);
 
   return (
     <ul className="w-full flex flex-col gap-1 p-2 h-full">
-      {friends.map((friend) => {
-        // Determine if the user is the requester or the addressee
-        const isUserRequester = friend.requesterId === user;
-        const otherParty = isUserRequester
-          ? friend.addressee
-          : friend.requester;
-
-        return (
-          <li key={otherParty.id}>
-            <ConversationItem
-              id={otherParty.id}
-              firstname={otherParty.firstname}
-              lastname={otherParty.lastname}
-              username={otherParty.username}
-              image={otherParty.image}
-            />
-          </li>
-        );
-      })}
+      {items.map((item) => (
+        <li
+          key={item.id}
+          className={
+            currentPath === `/chat/${item.id}`
+              ? "bg-gray-200 dark:bg-[#424242] "
+              : "bg-[#f7f5f5] dark:bg-[#2c2c2c]"
+          }
+        >
+          <ConversationItem data={item} />
+        </li>
+      ))}
     </ul>
   );
 };

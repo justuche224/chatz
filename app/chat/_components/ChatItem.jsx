@@ -2,7 +2,7 @@
 
 import StartChat from "./StartChat";
 
-const ChatItem = ({ id, firstname, lastname, username, image }) => {
+const ChatItem = ({ id, firstname, lastname, username, image, setOpen }) => {
   return (
     <div className="flex gap-2 bg-[#f7f5f5] dark:bg-[#2c2c2c] p-4 justify-between items-center">
       <div className="flex gap-4">
@@ -12,7 +12,7 @@ const ChatItem = ({ id, firstname, lastname, username, image }) => {
           <p>last message</p>
         </div>
         <div>
-          <StartChat id={id} />
+          <StartChat id={id} setOpen={setOpen} />
         </div>
       </div>
     </div>

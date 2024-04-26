@@ -4,16 +4,16 @@ import { useMemo } from "react";
 const useConversation = () => {
   const params = useParams();
 
-  const conversationId = useMemo(() => {
-    if (!params?.conversationId) {
+  const chatId = useMemo(() => {
+    if (!params?.chatId) {
       return "";
     }
-    return params?.conversationId;
-  }, [params?.conversationId]);
+    return params?.chatId;
+  }, [params?.chatId]);
 
-  const isOpen = useMemo(() => !!conversationId, [conversationId]);
+  const isOpen = useMemo(() => !!chatId, [chatId]);
 
-  return useMemo(() => ({ isOpen, conversationId }), [isOpen, conversationId]);
+  return useMemo(() => ({ isOpen, chatId }), [isOpen, chatId]);
 };
 
 export default useConversation;

@@ -4,7 +4,7 @@ import Link from "next/link";
 export default async function RootLayout({ children }) {
   return (
     <>
-      <nav className="center gap-3 px-5 my-2">
+      <nav className="center gap-3 px-5 mb-2 mt-16">
         <div>
           <Button>
             <Link href="/friends">Friends</Link>

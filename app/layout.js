@@ -1,10 +1,10 @@
 import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
-import Navbar from "@/components/Navbar/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import "./globals.css";
+import Nav from "@/components/Navbar/Nav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +20,7 @@ export default async function RootLayout({ children }) {
       <body className={`${inter.className}  bg-secondary h-screen`}>
         <SessionProvider session={session}>
           <NextTopLoader height={5} color="red" />
-          <Navbar />
+          <Nav />
           <main className="min-h-screen mt-12">{children}</main>
         </SessionProvider>
         <Toaster />

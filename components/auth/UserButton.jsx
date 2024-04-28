@@ -23,7 +23,6 @@ import {
 import LoginButton from "./login-button";
 import RegisterButton from "./register-button";
 import Link from "next/link";
-import Themes from "../Navbar/Theme";
 
 export const UserButton = () => {
   const user = useCurrentUser();

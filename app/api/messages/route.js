@@ -9,6 +9,7 @@ export async function POST(request) {
     const { message, image, chatId } = body;
 
     if (!user.email || !user.id) {
+      console.log('no user at MESSAGES/ROUTE.JS ');
       return new NextResponse("Unauthrised", { status: 401 });
     }
 

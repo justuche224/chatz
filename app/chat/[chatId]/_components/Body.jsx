@@ -16,7 +16,7 @@ const Body = ({ initialMessages }) => {
   }, [chatId]);
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto md:pr-20 lg:pr-0">
       {messages.map((message, i) => (
         <MessageItem
           isLast={i === messages.length - 1}

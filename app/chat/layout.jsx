@@ -15,7 +15,7 @@ const layout = async ({ children }) => {
   const initialConverstions = await getConversations();
   // console.log(initialConverstions);
   return (
-    <main className="w-full h-[93vh] fixed flex flex-col lg:flex-row bg-gray-100 dark:bg-[#2c2c2c]">
+    <main className="md:ml-[65px] w-full h-[93vh] fixed flex flex-col lg:flex-row bg-gray-100 dark:bg-[#2c2c2c]">
       <MobileChatlist
         initialConverstions={initialConverstions}
         friends={friends}

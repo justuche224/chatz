@@ -3,9 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MessagesSquare, Grid3X3, Users } from "lucide-react";
+import useViewport from "@/hooks/useViewport";
 
 const Navbar = () => {
   const currentPath = usePathname();
+
+  // console.log(currentPath);
+  const { width } = useViewport();
+  const isMobile = width < 768; // Check if viewport width is less than 768px
+  const isChatRoute = currentPath.startsWith("/chat/"); // Check if it's a chat route
+  console.log(isMobile, isChatRoute);
+  // console.log(width, height);
+  if (isChatRoute && isMobile) {
+    return;
+  }
   return (
     <nav
       className="

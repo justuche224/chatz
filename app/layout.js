@@ -17,8 +17,10 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const session = await auth();
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className}  bg-secondary h-screen`}>
+    <html lang="en">
+      <body
+        className={`${inter.className}  bg-white dark:bg-black text-black dark:text-white h-screen`}
+      >
         <SessionProvider session={session}>
           <NextTopLoader color="red" />
           <Navbar />

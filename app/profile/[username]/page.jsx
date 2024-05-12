@@ -7,6 +7,9 @@ import Link from "next/link";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
+import { getProfileOwnerPosts } from "@/actions/getProfileOwnerPosts";
+import FormError from "@/components/form-error";
+import Post from "@/components/Post";
 
 const page = async ({ params }) => {
   //console.log(params.username);
@@ -14,25 +17,29 @@ const page = async ({ params }) => {
   if (user.username == params.username) {
     redirect("/profile");
   }
-  const userDetails = await getUserByUsername(params.username);
-  if (!userDetails) {
+  const profileOwnerDetails = await getUserByUsername(params.username);
+
+  if (!profileOwnerDetails) {
     return (
       <div className="flex w-full h-screen justify-center items-center text-center">
         <h1 className="font-bold text-2xl">User not found!</h1>
       </div>
     );
   }
+
+  const profileOwnerPosts = await getProfileOwnerPosts(profileOwnerDetails);
+
   return (
     <section>
       <section className="flex flex-col items-center justify-center p-5">
         <div className="bg-secondary  w-[200px] h-[200px] text-9xl font-bold text-center flex justify-center items-center p-3 rounded-full">
-          {userDetails?.image ? (
+          {profileOwnerDetails?.image ? (
             <Dialog>
               <DialogTrigger>
                 {" "}
                 <div className="overflow-hidden  w-[200px] h-[200px]">
                   <Image
-                    src={userDetails.image}
+                    src={profileOwnerDetails.image}
                     className="w-full h-full object-cover rounded-full  border border-destructive"
                     alt="Profile"
                     width={400}
@@ -41,9 +48,9 @@ const page = async ({ params }) => {
                 </div>
               </DialogTrigger>
               <DialogContent>
-                <Link href={userDetails.image}>
+                <Link href={profileOwnerDetails.image}>
                   <Image
-                    src={userDetails.image}
+                    src={profileOwnerDetails.image}
                     className="w-full h-full"
                     alt="Profile"
                     width={500}
@@ -58,10 +65,12 @@ const page = async ({ params }) => {
         </div>
         <div>
           <h1 className="text-2xl text-center">
-            {userDetails?.firstname + " " + userDetails?.lastname}
+            {profileOwnerDetails?.firstname +
+              " " +
+              profileOwnerDetails?.lastname}
           </h1>
           <p className="text-center text-sm text-muted-foreground">
-            @{userDetails?.username}
+            @{profileOwnerDetails?.username}
           </p>
         </div>
         <div className="center gap-2 mt-3">
@@ -86,8 +95,25 @@ const page = async ({ params }) => {
           </TabsList>
           <TabsContent value="posts">
             <div className="center text-center">
-              {/*TODO add Posts*/}
-              No Posts!
+              {profileOwnerPosts.message ? (
+                <div className="center text-center flex flex-col items-center w-full h-full pb-16">
+                  <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+                    <FormError message={profileOwnerPosts.message} />
+                  </div>
+                </div>
+              ) : (
+                <div className="center text-center flex flex-col items-center w-full h-full pb-16">
+                  {profileOwnerPosts ? (
+                    <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+                      {profileOwnerPosts.map((post) => (
+                        <Post key={post.id} post={post} />
+                      ))}
+                    </div>
+                  ) : (
+                    "No Posts!"
+                  )}
+                </div>
+              )}
             </div>
           </TabsContent>
           <TabsContent value="mentions">

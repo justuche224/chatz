@@ -12,9 +12,15 @@ const Navbar = () => {
   const { width } = useViewport();
   const isMobile = width < 768; // Check if viewport width is less than 768px
   const isChatRoute = currentPath.startsWith("/chat/"); // Check if it's a chat route
-  console.log(isMobile, isChatRoute);
+  const isAuthPage = currentPath.startsWith("/auth/");
+  // console.log(isAuthPage);
+  // console.log(isMobile, isChatRoute);
   // console.log(width, height);
   if (isChatRoute && isMobile) {
+    return;
+  }
+
+  if (isAuthPage) {
     return;
   }
   return (

@@ -1,12 +1,22 @@
+"use client";
+
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@/components/auth/UserButton";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const font = Poppins({ subsets: ["latin"], weight: ["600"] });
 
 const Topbar = () => {
+  const currentPath = usePathname();
+  const isAuthPage = currentPath.startsWith("/auth/");
+
+  if (isAuthPage) {
+    return;
+  }
+
   return (
     <nav
       aria-label="Top Bar"
@@ -26,6 +36,7 @@ const Topbar = () => {
               dark:text-white
               border-b
               border-b-black
+              z-[998]
             "
     >
       <div className="">

@@ -11,7 +11,7 @@ export async function POST(request) {
 
     if (!user.email || !user.id) {
       console.log("no user at MESSAGES/ROUTE.JS ");
-      return new NextResponse("Unauthrised", { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const newMessage = await db.message.create({

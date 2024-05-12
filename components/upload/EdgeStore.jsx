@@ -9,7 +9,6 @@ import { DialogFooter } from "../ui/dialog";
 import { profilePicture } from "@/actions/profilePicture";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
-import { useRouter } from "next/navigation";
 
 export default function EdgeStore({ user }) {
   const { edgestore } = useEdgeStore();
@@ -18,7 +17,6 @@ export default function EdgeStore({ user }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center m-6 gap-2">

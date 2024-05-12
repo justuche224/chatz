@@ -37,6 +37,9 @@ model User {
 
   messages Message[]
   posts    Post[]
+  comments Comment[]
+  likes    Like[]
+  shares   Share[]
 }
 
 model Friendship {
@@ -58,15 +61,51 @@ enum FriendshipStatus {
 }
 
 model Post {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  content   String
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  String  @db.ObjectId
-
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String?
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+
+  commetIds String[]  @db.ObjectId
+  comments  Comment[]
+
+  likeIds String[] @db.ObjectId
+  likes   Like[]
+
+  shareIds String[] @db.ObjectId
+  shares   Share[]
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Share {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 model VerificationToken {

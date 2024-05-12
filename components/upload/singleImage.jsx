@@ -135,9 +135,9 @@ const SingleImageDropzone = React.forwardRef(
             />
           ) : (
             // Upload Icon
-            <div className="flex flex-col items-center justify-center text-xs text-gray-400">
+            <div className="flex flex-col items-center justify-center text-xs dark:text-white text-black">
               <FaCloudUploadAlt className="mb-2 h-7 w-7" />
-              <div className="text-gray-400 text-center p-2">
+              <div className=" text-center p-2">
                 select an image or drag & drop to upload
               </div>
               <div className="mt-3">

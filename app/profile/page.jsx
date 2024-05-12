@@ -15,10 +15,35 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { db } from "@/lib/db";
+import Post from "@/components/Post";
 
 const page = async () => {
   const user = await currentUser();
+
+  const myPosts = await await db.post.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          image: true,
+          firstname: true,
+          lastname: true,
+          username: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  // console.log(myPosts);
+
   const userDetails = await getUserByUsername(user?.username);
+
   if (!userDetails) {
     return (
       <div className="flex w-full h-screen justify-center items-center text-center">
@@ -126,9 +151,17 @@ const page = async () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="posts">
-              <div className="center text-center">
+              <div className="center text-center flex flex-col items-center w-full h-full pb-16">
                 {/*TODO add Posts*/}
-                No Posts!
+                {myPosts ? (
+                  <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+                    {myPosts.map((post) => (
+                      <Post key={post.id} post={post} />
+                    ))}
+                  </div>
+                ) : (
+                  "No Posts!"
+                )}
               </div>
             </TabsContent>
             <TabsContent value="mentions">

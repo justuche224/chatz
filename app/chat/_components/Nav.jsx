@@ -20,7 +20,6 @@ const Nav = ({ friends, user, initialConverstions }) => {
                     md:px-2
                   "
       >
-        <input type="text" className="w-full" placeholder="search chats" />
         <ChatList
           friends={friends}
           user={user}
@@ -31,7 +30,6 @@ const Nav = ({ friends, user, initialConverstions }) => {
         aria-label="Chat List"
         className={pathname === "/chat" ? "md:hidden h-full" : "hidden"}
       >
-        <input type="text" className="w-full" placeholder="search chats" />
         <ChatList
           friends={friends}
           user={user}

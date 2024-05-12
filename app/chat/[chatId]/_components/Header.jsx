@@ -20,7 +20,7 @@ const Header = ({ conversation }) => {
   }, [conversation]);
 
   return (
-    <div className="w-full flex border-b sm:px-4 md:pr-20 py-3 px-4 lg:px-6 justify-between items-center shadow-sm bg-white/50 dark:bg-black/50">
+    <div className="w-full flex border-b sm:px-4 md:pr-20 py-3 px-4 lg:px-6 justify-between items-center shadow-sm bg-white dark:bg-black">
       <div className="flex gap-3 items-center">
         <Link
           href="/chat"

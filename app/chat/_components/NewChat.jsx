@@ -47,7 +47,7 @@ const NewChat = ({ friends, user }) => {
       {pathname === `/chat` ? (
         <div
           className="
-            absolute 
+            fixed
             w-12 
             h-12 bg-red-500 
             rounded-full 

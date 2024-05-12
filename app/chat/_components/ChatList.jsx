@@ -50,20 +50,27 @@ const ChatList = ({ friends, user, initialConverstions }) => {
   }, [user.email]);
 
   return (
-    <ul className="w-full mt-5 h-full">
-      {items.map((item) => (
-        <li
-          key={item.id}
-          className={
-            currentPath === `/chat/${item.id}`
-              ? "bg-white dark:bg-gray-900 rounded-lg"
-              : "hover:bg-white hover:dark:bg-gray-900 hover:rounded-lg transition-colors"
-          }
-        >
-          <ChatItem data={item} />
-        </li>
-      ))}
-    </ul>
+    <div className="px-3 md:px-0">
+      <input
+        type="text"
+        className="w-full my-2 px-5 py-2 rounded-full"
+        placeholder="search chats"
+      />
+      <ul className="w-full mt-5 h-full">
+        {items.map((item) => (
+          <li
+            key={item.id}
+            className={
+              currentPath === `/chat/${item.id}`
+                ? "bg-white dark:bg-gray-900 rounded-lg"
+                : "hover:bg-white hover:dark:bg-gray-900 hover:rounded-lg transition-colors"
+            }
+          >
+            <ChatItem data={item} />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

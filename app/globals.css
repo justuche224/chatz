@@ -87,3 +87,8 @@ body {
 .center {
   @apply flex justify-center items-center;
 }
+
+#chat-page {
+  height: 100vh;
+  height: 100svh;
+}

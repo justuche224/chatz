@@ -74,7 +74,7 @@ const ChatItem = ({ data }) => {
         <div>
           {lastMessage?.createdAt && (
             <p className="md:text-sm">
-              {format(new Date(lastMessage.createdAt), "p")}
+              {format(new Date(lastMessage.createdAt), "p PP")}
             </p>
           )}
         </div>

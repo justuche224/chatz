@@ -50,7 +50,7 @@ const MessageItem = ({ data, isLast }) => {
             {`${data.sender.firstname} ${data.sender.lastname}`}
           </div>
           <div className="text-xs text-gray-400">
-            {format(new Date(data.createdAt), "p")}
+            {format(new Date(data.createdAt), "p PP")}
           </div>
         </div>
         <div className={message}>

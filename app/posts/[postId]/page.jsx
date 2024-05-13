@@ -4,7 +4,7 @@ import FormError from "@/components/form-error";
 
 const page = async ({ params }) => {
   const post = await getPost(params.postId);
-
+  console.log(post);
   if (post.error || !post) {
     return (
       <div className="flex flex-col items-center w-full h-full">

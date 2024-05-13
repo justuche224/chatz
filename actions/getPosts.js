@@ -49,6 +49,8 @@ export const getPosts = async () => {
             email: true,
           },
         },
+        likes: true,
+        comments: true,
       },
       orderBy: { createdAt: "desc" },
     });

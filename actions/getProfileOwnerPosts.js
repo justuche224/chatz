@@ -52,6 +52,8 @@ export const getProfileOwnerPosts = async (profileOwnerDetails) => {
             email: true,
           },
         },
+        likes: true,
+        comments: true,
       },
       orderBy: { createdAt: "desc" },
     });

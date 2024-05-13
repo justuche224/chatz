@@ -23,12 +23,16 @@ export const getPost = async (id) => {
             email: true,
           },
         },
+        likes: true,
+        comments: true,
       },
     });
 
     if (!post) {
       return { error: "Post not found!" };
     }
+
+    const isOwnPost = user.id === post.user.id;
 
     // Check if the current user is friends with the poster
     const isFriend = await db.friendship.findFirst({
@@ -48,7 +52,7 @@ export const getPost = async (id) => {
       },
     });
 
-    if (!isFriend) {
+    if (!isFriend && !isOwnPost) {
       return {
         error: "Unauthorized! You are not friends with the post creator.",
       };

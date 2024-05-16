@@ -19,6 +19,8 @@ import { toast } from "sonner";
 import { pusherClient } from "@/lib/pusher";
 import { findIndex } from "lodash"; // Use findIndex from lodash to get index of the like to be removed
 
+//TODO fix the like
+
 function Post({ post }) {
   const user = useCurrentUser();
 

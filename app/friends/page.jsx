@@ -13,43 +13,50 @@ const page = async () => {
     <div className="p-5">
       <h1 className="text-center text-2xl font-bold underline">Friends</h1>
       {friends && friends.length > 0 ? (
-        friends.map((friend) => (
-          <div
-            key={friend.id}
-            className="flex flex-col justify-center w-full border border-destructive my-2"
-          >
-            <div className="flex justify-between gap-5 items-center p-2">
-              <div className="flex gap-3">
-                {friend.requester.image ? (
-                  <div className="overflow-hidden w-[70px] h-[70px] rounded-full">
-                    <Image
-                      src={friend.requester.image}
-                      width={70}
-                      height={70}
-                      alt={`${friend.requester.firstname} ${friend.requester.lastname}`}
-                      className="rounded-full object-cover"
-                    />
+        friends.map((friend) => {
+          const isUserRequester = friend.requesterId === user.id;
+          const otherParty = isUserRequester
+            ? friend.addressee
+            : friend.requester;
+          // console.log(isUserRequester);
+          return (
+            <div
+              key={friend.id}
+              className="flex flex-col justify-center w-full border border-destructive my-2"
+            >
+              <div className="flex justify-between gap-5 items-center p-2">
+                <div className="flex gap-3">
+                  {otherParty.image ? (
+                    <div className="overflow-hidden w-[70px] h-[70px] rounded-full">
+                      <Image
+                        src={otherParty.image}
+                        width={70}
+                        height={70}
+                        alt={`${otherParty.firstname} ${otherParty.lastname}`}
+                        className="rounded-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <FaUser size={60} />
+                  )}
+                  <div>
+                    <h2 className="text-lg font-bold">{`${otherParty.firstname} ${otherParty.lastname}`}</h2>
+                    <h3 className="text-md text-muted-foreground">
+                      @{otherParty.username}
+                    </h3>
                   </div>
-                ) : (
-                  <FaUser size={60} />
-                )}
-                <div>
-                  <h2 className="text-lg font-bold">{`${friend.requester.firstname} ${friend.requester.lastname}`}</h2>
-                  <h3 className="text-md text-muted-foreground">
-                    @{friend.requester.username}
-                  </h3>
                 </div>
-              </div>
-              <div className="flex flex-col items-start">
-                <div className="flex justify-end items-center">
-                  <Link href={`/profile/${friend.requester.username}`}>
-                    <Button size="sm">View profile</Button>
-                  </Link>
+                <div className="flex flex-col items-start">
+                  <div className="flex justify-end items-center">
+                    <Link href={`/profile/${otherParty.username}`}>
+                      <Button size="sm">View profile</Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         <p className="text-center">
           No friends: chatz is better with friends, add friends to connect!

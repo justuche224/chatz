@@ -38,7 +38,7 @@ const Form = () => {
   };
 
   return (
-    <div className="py-4 px-4 bg-white dark:bg-black md:pb-0 pb-[58px] md:pr-20 lg:pr-0 border-t flex items-center gap-2 lg:gap-4 w-full">
+    <div className="py-4 px-4 bg-white dark:bg-black md:pb-[58px] pb-[58px] md:pr-20 lg:pr-0 border-t flex items-center gap-2 lg:gap-4 w-full">
       <CldUploadButton
         options={{ maxFiles: 1 }}
         onSuccess={(results) => {

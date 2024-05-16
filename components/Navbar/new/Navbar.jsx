@@ -15,7 +15,7 @@ const Navbar = () => {
   const isAuthPage = currentPath.startsWith("/auth/");
   // console.log(isAuthPage);
   // console.log(isMobile, isChatRoute);
-  // console.log(width, height);
+  // console.log(width);
   if (isChatRoute && isMobile) {
     return;
   }

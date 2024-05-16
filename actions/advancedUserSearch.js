@@ -7,42 +7,24 @@ export const advancedSearchUsers = async (search, user) => {
     const users = await db.user.findMany({
       where: {
         AND: [
-          {
-            id: {
-              not: user, // Exclude the user ID from the results
-            },
-          },
+          { id: { not: user } }, // Exclude the current user
           {
             OR: [
               { firstname: { contains: search, mode: "insensitive" } },
               { lastname: { contains: search, mode: "insensitive" } },
-              {
-                AND: [
-                  {
-                    firstname: {
-                      contains: search.split(" ")[0],
-                      mode: "insensitive",
-                    },
-                  },
-                  {
-                    lastname: {
-                      contains: search.split(" ")[1],
-                      mode: "insensitive",
-                    },
-                  },
-                ],
-              },
               { username: { contains: search, mode: "insensitive" } },
             ],
           },
         ],
       },
       select: {
+        id: true,
         firstname: true,
         lastname: true,
         username: true,
         image: true,
         sentRequests: {
+          // Include sentRequests and receivedRequests
           select: {
             status: true,
             addresseeId: true,
@@ -60,7 +42,6 @@ export const advancedSearchUsers = async (search, user) => {
     // Separate users based on friendship status
     const friends = [];
     const pending = [];
-    const blocked = [];
     const noFriendship = [];
 
     users.forEach((user) => {
@@ -70,27 +51,39 @@ export const advancedSearchUsers = async (search, user) => {
       ) {
         noFriendship.push(user);
       } else {
+        let isFriend = false;
+        let isPending = false;
+
         user.sentRequests.forEach((request) => {
           if (request.status === "ACCEPTED") {
-            friends.push(user);
+            isFriend = true;
           } else if (request.status === "PENDING") {
-            pending.push(user);
-          } else if (request.status === "BLOCKED") {
-            blocked.push(user);
+            isPending = true;
           }
         });
 
         user.receivedRequests.forEach((request) => {
           if (request.status === "ACCEPTED") {
-            friends.push(user);
+            isFriend = true;
           } else if (request.status === "PENDING") {
-            pending.push(user);
-          } else if (request.status === "BLOCKED") {
-            blocked.push(user);
+            isPending = true;
           }
         });
+
+        if (isFriend) {
+          friends.push(user);
+        } else if (isPending) {
+          pending.push(user);
+        } else {
+          noFriendship.push(user);
+        }
       }
     });
+
+    // console.log(friends, "friends");
+    // console.log(pending, "pending");
+    // console.log(noFriendship, "no friendship");
+
     return { friends, pending, noFriendship };
   } catch (error) {
     console.log(error);

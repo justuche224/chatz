@@ -7,8 +7,9 @@ import MessageInput from "./MessageInput";
 import { HiPaperAirplane } from "react-icons/hi2";
 import axios from "axios";
 import { CldUploadButton } from "next-cloudinary";
+import { toast } from "sonner";
 
-const Form = () => {
+const Form = ({ messages, setMessages, setSending }) => {
   const { chatId } = useConversation();
 
   const {
@@ -22,12 +23,25 @@ const Form = () => {
     },
   });
 
+  // const newMessage = {
+  //   id: "sending message id",
+  //   body: "message goes here",
+  //   image: "image url"
+  // }
+
   const onSubmit = async (data) => {
-    setValue("message", "", { shouldValidate: true });
-    axios.post("/api/messages", {
-      ...data,
-      chatId,
-    });
+    try {
+      setSending(true);
+      setValue("message", "", { shouldValidate: true });
+      await axios.post("/api/messages", {
+        ...data,
+        chatId,
+      });
+    } catch (error) {
+      toast("Something went wrong!");
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleUpload = (results) => {

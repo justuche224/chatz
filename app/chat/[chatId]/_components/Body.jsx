@@ -6,9 +6,10 @@ import MessageItem from "./MessageItem";
 import axios from "axios";
 import { pusherClient } from "@/lib/pusher";
 import { find } from "lodash";
+import { ClipLoader } from "react-spinners";
 
-const Body = ({ initialMessages }) => {
-  const [messages, setMessages] = useState(initialMessages);
+const Body = ({ messages, setMessages, sending }) => {
+  // const [messages, setMessages] = useState(initialMessages);
   // console.log(messages);
   const bottomRef = useRef(null);
 
@@ -55,7 +56,7 @@ const Body = ({ initialMessages }) => {
       pusherClient.unbind("message:new", messageHandler);
       pusherClient.unbind("message:update", updateMessageHandler);
     };
-  }, [chatId]);
+  }, [chatId, setMessages]);
   // console.log(messages, "wow");
   return (
     <div className="flex-1 overflow-y-auto md:pr-20 lg:pr-0">
@@ -66,6 +67,11 @@ const Body = ({ initialMessages }) => {
           data={message}
         />
       ))}
+      {sending && (
+        <p className="text-center flex justify-center items-center gap-3 text-md italic fixed bottom-[5.5rem] left-[45%] md:left-[60%] bg-red-500 p-2 rounded-full">
+          <span>sending</span> <ClipLoader color="blue" size={20} />
+        </p>
+      )}
       <div className="pt-24" ref={bottomRef}></div>
     </div>
   );

@@ -21,7 +21,7 @@ import Post from "@/components/Post";
 const page = async () => {
   const user = await currentUser();
 
-  const myPosts = await await db.post.findMany({
+  const myPosts = await db.post.findMany({
     where: {
       userId: user.id,
     },

@@ -14,10 +14,10 @@ export const getUserByEmail = async (email) => {
 export const getUserByUsername = async (username) => {
   try {
     const user = await db.user.findUnique({ where: { username } });
-
+    // console.log(user);
     return user;
   } catch (error) {
-    //console.log(error);
+    // console.log(error);
     return null;
   }
 };

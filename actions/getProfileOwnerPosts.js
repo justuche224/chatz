@@ -33,6 +33,7 @@ export const getProfileOwnerPosts = async (profileOwnerDetails) => {
       return {
         message:
           "You are not friends with this user. You can't view their posts.",
+        notFriends: true,
       };
     }
 

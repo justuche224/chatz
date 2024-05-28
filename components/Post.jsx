@@ -25,6 +25,7 @@ function Post({ post }) {
   const user = useCurrentUser();
 
   const [likes, setLikes] = useState(post.likes);
+  const [liking, setLiking] = useState(false);
 
   const likesCount = likes.length;
 
@@ -32,12 +33,15 @@ function Post({ post }) {
 
   const likePost = async () => {
     try {
+      setLiking(true);
       const response = await axios.post("/api/posts/like", {
         postId: post.id,
       });
       toast.success(response.data.message);
     } catch (error) {
       toast.error("Unable to like post!");
+    } finally {
+      setLiking(false);
     }
   };
 
@@ -126,6 +130,7 @@ function Post({ post }) {
       <div className="flex justify-between px-5">
         <button
           onClick={likePost}
+          disabled={liking}
           className="hover:scale-125 transition-all duration-100 flex gap-2"
         >
           <span>{likesCount}</span>{" "}

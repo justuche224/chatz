@@ -58,8 +58,8 @@ const ChatItem = ({ data }) => {
         <div className="flex gap-4">
           <div className="w-11 h-11 bg-green-400 rounded-full"></div>
           <div>
-            <h1 className="font-bold text-xl md:text-sm">
-              {data?.name || otherUser?.firstname + " " + otherUser?.lastname}
+            <h1 className="font-semibold text-xl md:text-xs">
+              {data?.name || otherUser?.firstname}
             </h1>
             <p
               className={clsx(
@@ -73,8 +73,8 @@ const ChatItem = ({ data }) => {
         </div>
         <div>
           {lastMessage?.createdAt && (
-            <p className="md:text-sm">
-              {format(new Date(lastMessage.createdAt), "p PP")}
+            <p className="md:text-[10px] text-sm">
+              {format(new Date(lastMessage.createdAt), "h:mm a MMM d")}
             </p>
           )}
         </div>

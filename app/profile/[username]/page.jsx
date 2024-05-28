@@ -10,6 +10,9 @@ import { redirect } from "next/navigation";
 import { getProfileOwnerPosts } from "@/actions/getProfileOwnerPosts";
 import FormError from "@/components/form-error";
 import Post from "@/components/Post";
+import { toast } from "sonner";
+import AddFriend from "@/components/AddFriend";
+import { checkFriendship } from "@/actions/checkFriendship";
 
 const page = async ({ params }) => {
   //console.log(params.username);
@@ -28,6 +31,8 @@ const page = async ({ params }) => {
   }
 
   const profileOwnerPosts = await getProfileOwnerPosts(profileOwnerDetails);
+
+  const isFriends = await checkFriendship(profileOwnerDetails.id);
 
   return (
     <section>
@@ -78,7 +83,12 @@ const page = async ({ params }) => {
             Posts{" "}
             <span className="ml-2 font-bold text-muted-foreground">123</span>
           </Button>
-          <Button variant="destructive">Add Friend</Button>
+          {!isFriends && (
+            <AddFriend
+              requesterId={user.id}
+              addresseeUsername={profileOwnerDetails.username}
+            />
+          )}
         </div>
       </section>
       <section className="w-full center">

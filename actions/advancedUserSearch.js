@@ -2,12 +2,12 @@
 
 import { db } from "@/lib/db";
 
-export const advancedSearchUsers = async (search, user) => {
+export const advancedSearchUsers = async (search, currentUserId) => {
   try {
     const users = await db.user.findMany({
       where: {
         AND: [
-          { id: { not: user } }, // Exclude the current user
+          { id: { not: currentUserId } }, // Exclude the current user
           {
             OR: [
               { firstname: { contains: search, mode: "insensitive" } },
@@ -45,44 +45,41 @@ export const advancedSearchUsers = async (search, user) => {
     const noFriendship = [];
 
     users.forEach((user) => {
-      if (
-        user.sentRequests.length === 0 &&
-        user.receivedRequests.length === 0
-      ) {
-        noFriendship.push(user);
-      } else {
-        let isFriend = false;
-        let isPending = false;
+      let isFriend = false;
+      let isPending = false;
 
-        user.sentRequests.forEach((request) => {
+      // Check sent requests
+      user.sentRequests.forEach((request) => {
+        if (request.addresseeId === currentUserId) {
           if (request.status === "ACCEPTED") {
             isFriend = true;
           } else if (request.status === "PENDING") {
             isPending = true;
           }
-        });
-
-        user.receivedRequests.forEach((request) => {
-          if (request.status === "ACCEPTED") {
-            isFriend = true;
-          } else if (request.status === "PENDING") {
-            isPending = true;
-          }
-        });
-
-        if (isFriend) {
-          friends.push(user);
-        } else if (isPending) {
-          pending.push(user);
-        } else {
-          noFriendship.push(user);
         }
+      });
+
+      // Check received requests
+      user.receivedRequests.forEach((request) => {
+        if (request.requesterId === currentUserId) {
+          if (request.status === "ACCEPTED") {
+            isFriend = true;
+          } else if (request.status === "PENDING") {
+            isPending = true;
+          }
+        }
+      });
+
+      if (isFriend) {
+        friends.push(user);
+      } else if (isPending) {
+        pending.push(user);
+      } else {
+        noFriendship.push(user);
       }
     });
 
-    // console.log(friends, "friends");
-    // console.log(pending, "pending");
-    // console.log(noFriendship, "no friendship");
+    // console.log(pending);
 
     return { friends, pending, noFriendship };
   } catch (error) {

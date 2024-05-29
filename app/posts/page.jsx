@@ -4,9 +4,8 @@ import { getPosts } from "@/actions/getPosts";
 import FormError from "@/components/form-error";
 import Post from "@/components/Post";
 
-const page = async () => {
+const Page = async () => {
   const posts = await getPosts();
-  // console.log(posts);
   if (!posts) {
     return (
       <div className="flex flex-col items-center w-full h-full">
@@ -16,6 +15,7 @@ const page = async () => {
       </div>
     );
   }
+
   return (
     <div className="flex flex-col items-center w-full h-full pb-16">
       <div className="w-full max-w-xl">
@@ -23,7 +23,7 @@ const page = async () => {
           <NewPost />
         </EdgeStoreProvider>
       </div>
-      <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+      <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10 mb-20 md:mb-0">
         {posts.map((post) => (
           <Post key={post.id} post={post} />
         ))}
@@ -32,4 +32,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Page;

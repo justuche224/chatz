@@ -16,7 +16,7 @@ const page = async ({ params }) => {
   }
 
   return (
-    <div className="w-full h-full bg-black flex flex-col items-center py-10 gap-10">
+    <div className="w-full h-full bg-black flex flex-col items-center py-10 gap-10 mb-20 md:mb-0">
       <Post post={post} />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { format } from "date-fns";
 import {
@@ -17,19 +17,15 @@ import Link from "next/link";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { toast } from "sonner";
 import { pusherClient } from "@/lib/pusher";
-import { findIndex } from "lodash"; // Use findIndex from lodash to get index of the like to be removed
-
-//TODO fix the like
+import { findIndex } from "lodash";
 
 function Post({ post }) {
   const user = useCurrentUser();
-
   const [likes, setLikes] = useState(post.likes);
   const [liking, setLiking] = useState(false);
 
-  const likesCount = likes.length;
-
-  const likedByCurrentUser = likes.some((like) => like.userId === user.id);
+  const likesCount = likes?.length;
+  const likedByCurrentUser = likes?.some((like) => like?.userId === user.id);
 
   const likePost = async () => {
     try {
@@ -45,38 +41,45 @@ function Post({ post }) {
     }
   };
 
+  const handleNewLike = useCallback(
+    (newLike) => {
+      if (newLike.postId === post.id) {
+        setLikes((current) => [...current, newLike]);
+      }
+    },
+    [post.id]
+  );
+
+  const handleRemovedLike = useCallback(
+    (removedLike) => {
+      if (removedLike.postId === post.id) {
+        setLikes((current) => {
+          const index = findIndex(current, { id: removedLike.id });
+          if (index !== -1) {
+            const updatedLikes = [...current];
+            updatedLikes.splice(index, 1);
+            return updatedLikes;
+          }
+          return current;
+        });
+      }
+    },
+    [post.id]
+  );
+
   useEffect(() => {
-    if (!post.id) {
-      return;
-    }
-
-    const newHandler = (newLike) => {
-      setLikes((current) => [...current, newLike]);
-    };
-
-    const removedHandler = (removedLike) => {
-      setLikes((current) => {
-        const index = findIndex(current, { id: removedLike.id });
-        if (index !== -1) {
-          // Remove the like from the array if found
-          const updatedLikes = [...current];
-          updatedLikes.splice(index, 1);
-          return updatedLikes;
-        }
-        return current;
-      });
-    };
+    if (!post.id) return;
 
     pusherClient.subscribe(post.id);
-    pusherClient.bind("likes:new", newHandler);
-    pusherClient.bind("likes:removed", removedHandler);
+    pusherClient.bind("likes:new", handleNewLike);
+    pusherClient.bind("likes:removed", handleRemovedLike);
 
     return () => {
       pusherClient.unsubscribe(post.id);
-      pusherClient.unbind("likes:new", newHandler);
-      pusherClient.unbind("likes:removed", removedHandler);
+      pusherClient.unbind("likes:new", handleNewLike);
+      pusherClient.unbind("likes:removed", handleRemovedLike);
     };
-  }, [post.id]);
+  }, [post.id, handleNewLike, handleRemovedLike]);
 
   return (
     <div className="w-full max-w-xl flex flex-col py-3 gap-3 border">
@@ -133,7 +136,7 @@ function Post({ post }) {
           disabled={liking}
           className="hover:scale-125 transition-all duration-100 flex gap-2"
         >
-          <span>{likesCount}</span>{" "}
+          <span>{likesCount}</span>
           <Heart className={likedByCurrentUser ? "text-red-500" : ""} />
         </button>
         <button className="hover:scale-125 transition-all duration-100">

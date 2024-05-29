@@ -36,6 +36,8 @@ const page = async () => {
           email: true,
         },
       },
+      likes: true,
+      comments: true,
     },
     orderBy: { createdAt: "desc" },
   });

@@ -156,7 +156,7 @@ const page = async () => {
               <div className="center text-center flex flex-col items-center w-full h-full pb-16">
                 {/*TODO add Posts*/}
                 {myPosts ? (
-                  <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+                  <div className="w-full max-w-xl h-full flex flex-col items-center py-10 gap-10">
                     {myPosts.map((post) => (
                       <Post key={post.id} post={post} />
                     ))}

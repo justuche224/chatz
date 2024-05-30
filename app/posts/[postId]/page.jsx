@@ -11,7 +11,7 @@ const page = async ({ params }) => {
   if (post.error || !post) {
     return (
       <div className="flex flex-col items-center w-full h-full">
-        <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+        <div className="w-full max-w-xl h-full flex flex-col items-center py-10 gap-10">
           <FormError message={post.error || "Error getting post"} />
         </div>
       </div>
@@ -19,7 +19,7 @@ const page = async ({ params }) => {
   }
 
   return (
-    <div className="w-full h-full bg-black flex flex-col items-center py-10 gap-10 pb-[60rem] md:mb-0">
+    <div className="w-full h-full flex flex-col items-center py-10 gap-10 pb-[60rem] md:mb-0">
       <Post post={post} />
       <section className="w-full mt-10">
         <CommentSection postId={params.postId} initialComments={comments} />

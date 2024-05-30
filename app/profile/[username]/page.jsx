@@ -107,14 +107,14 @@ const page = async ({ params }) => {
             <div className="center text-center">
               {profileOwnerPosts.message ? (
                 <div className="center text-center flex flex-col items-center w-full h-full pb-16">
-                  <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+                  <div className="w-full max-w-xl h-full flex flex-col items-center py-10 gap-10">
                     <FormError message={profileOwnerPosts.message} />
                   </div>
                 </div>
               ) : (
                 <div className="center text-center flex flex-col items-center w-full h-full pb-16">
                   {profileOwnerPosts ? (
-                    <div className="w-full max-w-xl h-full bg-black flex flex-col items-center py-10 gap-10">
+                    <div className="w-full max-w-xl h-full flex flex-col items-center py-10 gap-10">
                       {profileOwnerPosts.map((post) => (
                         <Post key={post.id} post={post} />
                       ))}

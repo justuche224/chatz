@@ -27,6 +27,11 @@ function Post({ post }) {
   const likesCount = likes?.length;
   const likedByCurrentUser = likes?.some((like) => like?.userId === user.id);
 
+  const topLevelComments = post.comments.filter(
+    (comment) => comment.parentId === null
+  );
+  const topLevelCommentsCount = topLevelComments.length;
+
   const likePost = async () => {
     try {
       setLiking(true);
@@ -120,7 +125,7 @@ function Post({ post }) {
           {post.image && (
             <div className="overflow-hidden">
               <Image
-                className="w-full h-auto mt-3 hover:scale-125 duration-200 transition-all cursor-pointer"
+                className="w-full h-auto max-h-[300px] mt-3 hover:scale-125 duration-200 transition-all cursor-pointer object-cover"
                 src={post.image}
                 alt="post"
                 width={500}
@@ -139,7 +144,8 @@ function Post({ post }) {
           <span>{likesCount}</span>
           <Heart className={likedByCurrentUser ? "text-red-500" : ""} />
         </button>
-        <button className="hover:scale-125 transition-all duration-100">
+        <button className="hover:scale-125 transition-all duration-100 flex gap-2">
+          <span>{topLevelCommentsCount}</span>
           <MessageCircle />
         </button>
         <button className="hover:scale-125 transition-all duration-100">

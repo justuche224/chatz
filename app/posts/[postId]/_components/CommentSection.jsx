@@ -1,26 +1,60 @@
 "use client";
-import FormError from "@/components/form-error";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import axios from "axios";
 import { format } from "date-fns";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { HiPaperAirplane } from "react-icons/hi2";
+import { ClipLoader } from "react-spinners";
 import { toast } from "sonner";
+import Comment from "./Comment";
 
 function CommentSection({ postId, initialComments }) {
   const [comments, setComments] = useState(initialComments);
   const [comment, setComment] = useState("");
+  const [replyTo, setReplyTo] = useState("");
   const [commenting, setCommenting] = useState(false);
   const [error, setError] = useState("");
   const user = useCurrentUser();
+  const inputRef = useRef(null);
+
+  const handleReplyClick = (comment) => {
+    setReplyTo(comment);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   const postComment = async (e) => {
     e.preventDefault();
 
     if (!comment) {
-      setError("Enter a comment!");
+      toast("Enter a comment!");
       return;
     }
+
+    if (replyTo) {
+      try {
+        setCommenting(true);
+        setError("");
+        const response = await axios.post("/api/posts/comment", {
+          content: comment,
+          userId: user.id,
+          postId: postId,
+          parentId: replyTo.id,
+        });
+        toast.success(response.data.message);
+        // console.log(response.data.newComment);
+        setComment("");
+        setReplyTo("");
+      } catch (error) {
+        toast.error("Failed to add reply!");
+      } finally {
+        setCommenting(false);
+      }
+      return;
+    }
+
     try {
       setCommenting(true);
       setError("");
@@ -30,7 +64,7 @@ function CommentSection({ postId, initialComments }) {
         postId: postId,
       });
       toast.success(response.data.message);
-      console.log(response.data.newComment);
+      //   console.log(response.data.newComment);
       setComment("");
     } catch (error) {
       toast.error("Failed to add comment!");
@@ -40,144 +74,64 @@ function CommentSection({ postId, initialComments }) {
   };
 
   return (
-    <section className=" py-8 lg:py-16 antialiased">
-      <div className="w-full mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-            Discussion (20)
-          </h2>
-        </div>
-        <form className="mb-6" onSubmit={postComment}>
-          <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-            <label htmlFor="comment" className="sr-only">
-              Your comment
-            </label>
-            <textarea
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              rows="4"
-              className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-              placeholder="Write a comment..."
-              required
-            ></textarea>
+    <section className="w-full py-8 lg:py-16 antialiased mb-20">
+      {/* comment input */}
+      <form
+        onSubmit={postComment}
+        className="w-full fixed bottom-0 pb-[60px] md:pb-[10px] bg-white dark:bg-black text-black dark:text-white "
+      >
+        {replyTo ? (
+          <div className="flex gap-5 text-2xl pl-10">
+            <span>
+              replying to:{" "}
+              <span className="font-bold">
+                {replyTo?.user?.firstname + " " + replyTo?.user?.lastname}
+              </span>
+            </span>
+            <button
+              className="italic text-destructive"
+              onClick={() => setReplyTo(null)}
+            >
+              cancel
+            </button>
           </div>
+        ) : null}
+        <div className="w-full flex justify-center gap-5 ">
+          <input
+            ref={inputRef}
+            className="w-[80%] py-2 px-4 bg-neutral-300 text-black rounded-full focus:outline-none"
+            type="text"
+            placeholder="Write a comment..."
+            onChange={(e) => setComment(e.target.value)}
+            value={comment}
+            required
+          />
           <button
             disabled={commenting}
             type="submit"
-            className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-destructive rounded-lg focus:ring-4 focus:ring-destructive hover:opacity-90"
+            className="rounded-full p-2 cursor-pointer bg-destructive"
           >
-            Post comment
+            {commenting ? (
+              <ClipLoader color="blue" size={20} />
+            ) : (
+              <HiPaperAirplane size={18} className="text-white" />
+            )}
           </button>
-        </form>
-        <FormError message={error} />
+        </div>
+      </form>
+      {/* comment input ends */}
+      <div className="w-full mx-auto px-4">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
+            Discussion ({comments.length})
+          </h2>
+        </div>
         {comments?.map((comment) => (
-          <article
+          <Comment
             key={comment.id}
-            className="p-6 text-base bg-white rounded-lg dark:bg-gray-900"
-          >
-            <footer className="flex justify-between items-center mb-2">
-              <div className="flex items-center">
-                <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
-                  <Image
-                    width={30}
-                    height={30}
-                    className="mr-2 w-6 h-6 rounded-full"
-                    src="https://files.edgestore.dev/gcbqsnz4g16h4x8z/chatz/_public/profile/f4d991b6-7f8b-43f7-8852-269c8917debf.jpg"
-                    alt="Michael Gough"
-                  />
-                  {comment.user.firstname + " " + comment.user.lastname}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <time
-                    pubdate="true"
-                    dateTime="2022-02-08"
-                    title="February 8th, 2022"
-                  >
-                    {format(new Date(comment.createdAt), "h:mm a MMM d yyyy")}
-                  </time>
-                </p>
-              </div>
-              <button
-                id="dropdownComment1Button"
-                data-dropdown-toggle="dropdownComment1"
-                className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                type="button"
-              >
-                <svg
-                  className="w-4 h-4"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 16 3"
-                >
-                  <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                </svg>
-                <span className="sr-only">Comment settings</span>
-              </button>
-              {/* <!-- Dropdown menu --> */}
-              <div
-                id="dropdownComment1"
-                className="hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
-              >
-                <ul
-                  className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                  aria-labelledby="dropdownMenuIconHorizontalButton"
-                >
-                  <li>
-                    <a
-                      href="#"
-                      className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Edit
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Remove
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Report
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </footer>
-            <p className="text-gray-500 dark:text-gray-400">
-              {comment.content}
-            </p>
-            <div className="flex items-center mt-4 space-x-4">
-              <button
-                type="button"
-                className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium"
-              >
-                <svg
-                  className="mr-1.5 w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-                  />
-                </svg>
-                Reply
-              </button>
-            </div>
-          </article>
+            comment={comment}
+            handleReplyClick={handleReplyClick}
+          />
         ))}
       </div>
     </section>

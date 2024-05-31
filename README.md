@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chatz
 
-## Getting Started
+> live version of the app here https://chatz-eta.vercel.app/
 
-First, run the development server:
+### Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Chatz is a real-time social media application built with Next.js, utilizing both its frontend and backend capabilities. The app leverages Prisma as an ORM to interact with a MongoDB database. Real-time features are powered by Pusher. Below is a detailed overview of some of the app's features,
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### User Management
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **User Registration and Authentication**: Users can register, log in, and reset their passwords. Email verification is also supported.
+- **Profile Management**: Users can update their profile information, including their profile picture, (username, email, profile picture, and other personal details are comming soon).
+- **User Roles**: There are two user roles - ADMIN and USER. The default role for new users is USER.
 
-## Learn More
+### Social Interactions
 
-To learn more about Next.js, take a look at the following resources:
+- **Friendship**: Users can send, receive, accept, or decline friendship requests. The status of a friendship can be PENDING, ACCEPTED, DECLINED, or BLOCKED.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Messaging**: Users can chat with their friends and chats are updated in real-time. (read reciept available but requires refresh)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Group chat**: comming soon.
 
-## Deploy on Vercel
+- **Profile**: Users can visit and view other peoples profile but wont see the users post unless they are friends
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Posts**: Users can create, (edit, and delete comming soon) posts. Posts can contain text content and images.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Comments and Replies**: Users can comment on posts and reply to other comments. Comments and replies can be nested infinitely and are updated in real-time.
+
+- **Likes and Shares**: Users can like and share posts. Each like and share is associated with a specific user and post. The like count on posts is updated in real time.

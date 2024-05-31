@@ -1,0 +1,53 @@
+{
+  "name": "Chatz: Chat, and Connect!",
+  "short_name": "Chatz",
+  "theme_color": "#7f1d1d",
+  "background_color": "#7f1d1d",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "categories": ["Chat", "Message", "Connect", "Posts", "Friends"],
+  "description": "Connect with friends, chat and share posts!",
+  "shortcuts": [
+    {
+      "name": "Messages",
+      "url": "/chat"
+    },
+    {
+      "name": "Posts",
+      "url": "/posts"
+    },
+    {
+      "name": "Friends list",
+      "url": "/freinds"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/images/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

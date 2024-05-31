@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import ChatItem from "./ChatItem";
-import { pusherClient } from "@/lib/pusher";
 import { find } from "lodash";
+import { pusherClient } from "@/lib/pusher";
+import ChatItem from "./ChatItem";
 
 const ChatList = ({ friends, user, initialConverstions }) => {
   const currentPath = usePathname();
@@ -53,7 +53,7 @@ const ChatList = ({ friends, user, initialConverstions }) => {
     <div className="px-3 md:px-0">
       <input
         type="text"
-        className="w-full my-2 px-5 py-2 rounded-full"
+        className="my-2 py-2 px-4 bg-neutral-300 text-black w-full rounded-full focus:outline-none"
         placeholder="search chats"
       />
       <ul className="w-full mt-5 h-full">

@@ -10,7 +10,12 @@ import Comment from "./Comment";
 import { find } from "lodash";
 
 function CommentSection({ postId, initialComments }) {
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState(
+    initialComments.map((comment) => ({
+      ...comment,
+      replies: comment.replies || [],
+    }))
+  );
   const [comment, setComment] = useState("");
   const [replyTo, setReplyTo] = useState("");
   const [commenting, setCommenting] = useState(false);
@@ -90,6 +95,38 @@ function CommentSection({ postId, initialComments }) {
     return () => {
       pusherClient.unsubscribe(postId);
       pusherClient.unbind("comment:new", newCommentHandler);
+    };
+  }, [postId]);
+
+  useEffect(() => {
+    const newReplyHandler = (newReply) => {
+      setComments((prevComments) => {
+        const updateReplies = (comments) => {
+          return comments.map((comment) => {
+            if (comment.id === newReply.parentId) {
+              return {
+                ...comment,
+                replies: [...(comment.replies || []), newReply],
+              };
+            } else if (comment.replies) {
+              return {
+                ...comment,
+                replies: updateReplies(comment.replies),
+              };
+            }
+            return comment;
+          });
+        };
+        return updateReplies(prevComments);
+      });
+    };
+
+    pusherClient.subscribe(postId);
+    pusherClient.bind("reply:new", newReplyHandler);
+
+    return () => {
+      pusherClient.unsubscribe(postId);
+      pusherClient.unbind("reply:new", newReplyHandler);
     };
   }, [postId]);
 

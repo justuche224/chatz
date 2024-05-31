@@ -33,7 +33,7 @@ export async function POST(request) {
       throw new Error("Unauthorised: id dosent match");
     }
     if (parentId) {
-      const newComment = await db.comment.create({
+      const newReply = await db.comment.create({
         data: {
           content,
           isTop: false,
@@ -86,8 +86,8 @@ export async function POST(request) {
         },
       });
 
-      // await pusher.trigger(postId, "comment:new", newComment);
-      return NextResponse.json({ message: "Comment added", newComment });
+      await pusher.trigger(postId, "reply:new", newReply);
+      return NextResponse.json({ message: "Comment added", newReply });
     }
     const newComment = await db.comment.create({
       data: {

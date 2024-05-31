@@ -107,7 +107,7 @@ function Comment({ comment, handleReplyClick }) {
           Reply
         </button>
       </div>
-      {comment.replies.map((reply) => (
+      {comment?.replies?.map((reply) => (
         <Reply
           key={reply.id}
           reply={reply}

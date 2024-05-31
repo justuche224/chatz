@@ -1,13 +1,13 @@
 "use client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import axios from "axios";
-import { format } from "date-fns";
-import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { HiPaperAirplane } from "react-icons/hi2";
+import { pusherClient } from "@/lib/pusher";
 import { ClipLoader } from "react-spinners";
 import { toast } from "sonner";
 import Comment from "./Comment";
+import { find } from "lodash";
 
 function CommentSection({ postId, initialComments }) {
   const [comments, setComments] = useState(initialComments);
@@ -72,6 +72,26 @@ function CommentSection({ postId, initialComments }) {
       setCommenting(false);
     }
   };
+
+  useEffect(() => {
+    pusherClient.subscribe(postId);
+
+    const newCommentHandler = (newComment) => {
+      // console.log(newComment);
+      setComments((current) => {
+        if (find(current, { id: newComment.id })) {
+          return current;
+        }
+        return [...current, newComment];
+      });
+    };
+    pusherClient.bind("comment:new", newCommentHandler);
+
+    return () => {
+      pusherClient.unsubscribe(postId);
+      pusherClient.unbind("comment:new", newCommentHandler);
+    };
+  }, [postId]);
 
   return (
     <section className="w-full py-8 lg:py-16 antialiased mb-20">

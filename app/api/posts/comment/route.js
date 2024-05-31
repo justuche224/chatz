@@ -2,12 +2,23 @@ import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { pusher } from "@/lib/pusher";
-//TODO remember validations
+
+const validateInput = (data) => {
+  const { content, userId, postId, parentId } = data;
+  if (!content || typeof content !== "string" || content.trim().length === 0) {
+    throw new Error("Invalid content");
+  }
+  if (!userId || !postId || (parentId && typeof parentId !== "string")) {
+    throw new Error("Invalid IDs");
+  }
+};
+
 export async function POST(request) {
   try {
     const user = await currentUser();
     // console.log(user.id);
     const body = await request.json();
+    validateInput(body);
     const { content, userId, postId, parentId } = body;
     // console.log(parentId);
     // return NextResponse.json({ message: "Comment added" });
@@ -75,8 +86,7 @@ export async function POST(request) {
         },
       });
 
-      // await pusher.trigger(postId, "likes:new", newLike);
-      //   console.log(newComment);
+      // await pusher.trigger(postId, "comment:new", newComment);
       return NextResponse.json({ message: "Comment added", newComment });
     }
     const newComment = await db.comment.create({
@@ -95,6 +105,7 @@ export async function POST(request) {
         },
       },
       include: {
+        replies: true,
         user: {
           select: {
             id: true,
@@ -126,9 +137,8 @@ export async function POST(request) {
         },
       },
     });
-
-    // await pusher.trigger(postId, "likes:new", newLike);
-
+    // console.log(newComment);
+    await pusher.trigger(postId, "comment:new", newComment);
     return NextResponse.json({ message: "Comment added", newComment });
   } catch (error) {
     console.log(error);

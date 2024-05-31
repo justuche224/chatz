@@ -22,12 +22,13 @@ import { findIndex } from "lodash";
 function Post({ post }) {
   const user = useCurrentUser();
   const [likes, setLikes] = useState(post.likes);
+  const [comments, setComments] = useState(post.comments);
   const [liking, setLiking] = useState(false);
 
   const likesCount = likes?.length;
   const likedByCurrentUser = likes?.some((like) => like?.userId === user.id);
 
-  const topLevelComments = post.comments.filter(
+  const topLevelComments = comments.filter(
     (comment) => comment.parentId === null
   );
   const topLevelCommentsCount = topLevelComments.length;
@@ -45,6 +46,15 @@ function Post({ post }) {
       setLiking(false);
     }
   };
+
+  const handleNewComment = useCallback(
+    (newComment) => {
+      if (newComment.post.id === post.id) {
+        setComments((current) => [...current, newComment]);
+      }
+    },
+    [post.id]
+  );
 
   const handleNewLike = useCallback(
     (newLike) => {
@@ -78,13 +88,15 @@ function Post({ post }) {
     pusherClient.subscribe(post.id);
     pusherClient.bind("likes:new", handleNewLike);
     pusherClient.bind("likes:removed", handleRemovedLike);
+    pusherClient.bind("comment:new", handleNewComment);
 
     return () => {
       pusherClient.unsubscribe(post.id);
       pusherClient.unbind("likes:new", handleNewLike);
       pusherClient.unbind("likes:removed", handleRemovedLike);
+      pusherClient.unbind("comment:new", handleNewComment);
     };
-  }, [post.id, handleNewLike, handleRemovedLike]);
+  }, [post.id, handleNewLike, handleRemovedLike, handleNewComment]);
 
   return (
     <div className="w-full max-w-xl flex flex-col py-3 gap-3 border">
